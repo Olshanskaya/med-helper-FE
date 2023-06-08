@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Button, Container, Form, InputGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
+import axios from 'axios';
 
-function AddMedicinePage() {
+const AddMedicinePage = () => {
   const [medicines, setMedicines] = useState([]);
   const [activeSubstances, setActiveSubstances] = useState([]);
   const [selectedSubstance, setSelectedSubstance] = useState(null);
@@ -17,20 +18,20 @@ function AddMedicinePage() {
     fetchActiveSubstances();
   }, []);
 
-  const fetchMedicines = async () => {
+  const fetchMedicines = () => {
     try {
-      const response = await fetch('http://localhost:8080/admin/meds/all');
-      const data = await response.json();
+      const response = fetch('http://localhost:8080/admin/meds/all');
+      const data = response.json();
       setMedicines(data);
     } catch (error) {
       console.error('Error fetching medicines:', error);
     }
   };
 
-  const fetchActiveSubstances = async () => {
+  const fetchActiveSubstances = () => {
     try {
-      const response = await fetch('http://localhost:8080/admin/sub/all');
-      const data = await response.json();
+      const response = fetch('http://localhost:8080/admin/sub/all');
+      const data = response.json();
       const sortedSubstances = data
         .map((substance) => ({ value: substance.name, label: substance.name }))
         .sort((a, b) => a.label.localeCompare(b.label)); // Сортировка по алфавиту
@@ -56,29 +57,32 @@ function AddMedicinePage() {
     navigate(-1); // Navigate back to the previous page
   };
 
-  const handleCreateButtonClick = async () => {
-    try {
-      const response = await fetch('http://localhost:8080/admin/meds/new', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: medicineName,
-          activeSubstanceId: selectedSubstance.value,
-        }),
-      });
+  const handleCreateButtonClick = () => {
+    const confirmCreate = window.confirm(`Вы уверены, что хотите создать лекарственное средство?`);
+    if (confirmCreate) {
+      const data = {
+        email: 'asdlefnekjfn',
+        password: '123',
+        authority: {
+          id: 2,
+          authority: 'ADMIN'
+        }
+      };
 
-      if (response.status === 404) {
-        setCreateStatus('Такое лекарственное средство уже существует');
-      } else {
-        setCreateStatus('Лекарственное средство создано');
-        //window.location.reload();
-      }
-    } catch (error) {
-      console.error('Error creating medicine:', error);
+      axios.post('http://localhost:8080/register', data)
+        .then(response => {
+          // Обработка успешного создания администратора
+          window.alert(`Администратор успешно создан.`);
+          //window.location.reload();
+        })
+        .catch(error => {
+          // Обработка ошибки при создании администратора
+          console.error(error);
+          window.alert('Ошибка при создании администратора.');
+        });
     }
   };
+
 
   return (
     <Container>
@@ -113,8 +117,6 @@ function AddMedicinePage() {
             Создать
         </Button>
       </Form>
-
-      {createStatus && <p>{createStatus}</p>}
 
       <h2>Все лекарственные средства</h2>
       {medicines.map((medicine) => (
