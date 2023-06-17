@@ -40,13 +40,13 @@ function HomePage({ onLogout }) {
       <h1>Домашняя страница</h1>
       <div className="d-grid gap-2">
         <Button variant="primary" className="mb-2" onClick={navigateToCreateAdmin}>
-          Создать нового администратора
+          Управление администраторами
         </Button>
         <Button variant="primary" className="mb-2" onClick={navigateToAddMedicine}>
-          Внести новый лекарственный препарат
+          Управление лекарственными препаратами
         </Button>
         <Button variant="primary" className="mb-2" onClick={navigateToAddSubstance}>
-          Внести новое действующее вещество
+          Управление действующими веществами
         </Button>
       </div>
     </Container>
