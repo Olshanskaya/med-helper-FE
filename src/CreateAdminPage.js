@@ -77,7 +77,7 @@ const CreateAdminPage = () => {
     <Container>
       <div className="d-flex justify-content-end mb-3">
         <Button variant="primary" className="me-2" onClick={handleGoBack}>
-          Назад
+          Выйти
         </Button>
       </div>
       <h1>Страница создания администратора</h1>
